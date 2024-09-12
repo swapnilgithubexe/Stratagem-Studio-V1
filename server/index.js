@@ -2,22 +2,32 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./database/db.js";
 
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("<h3> Server is working </h3>")
-})
+//Middlewares
+app.use(express.json());
 
-//Handling Routes
+// Route to check if the server is running
+app.get("/", (req, res) => {
+  res.send("<h3> Server is working </h3>");
+});
+
+// Handling Routes
 import userRoutes from "./routes/user.js";
 
-//Using Routes
+// Using Routes
 app.use("/api/v1", userRoutes);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port number ${process.env.PORT}`);
-  connectDb()
+// Fallback port in case process.env.PORT is undefined
+const PORT = process.env.PORT || 5000;
 
-})
+// Starting the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port number ${PORT}`);
+
+  // Connecting to the database
+  connectDb();
+});
