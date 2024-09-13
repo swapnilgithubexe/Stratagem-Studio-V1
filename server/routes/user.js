@@ -1,5 +1,6 @@
 import express from "express";
-import { confirmUser, register } from "../controllers/user.js";
+import { confirmUser, login, myProfile, register } from "../controllers/user.js";
+import { isAuth } from "../middlewares/isAuth.js";
 
 const router = express.Router();
 
@@ -8,6 +9,8 @@ router.get("/user/register", register);
 
 router.post("/user/register", register);
 router.post("/user/confirm", confirmUser);
+router.post("/user/login", login);
+router.get("/user/me", isAuth, myProfile);
 
 
 export default router;
