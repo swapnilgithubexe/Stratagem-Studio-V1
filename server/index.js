@@ -16,10 +16,15 @@ app.get("/", (req, res) => {
 });
 
 // Handling Routes
+import courseRoutes from "./routes/course.js";
+import adminRoutes from "./routes/admin.js";
 import userRoutes from "./routes/user.js";
 
 // Using Routes
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", courseRoutes);
+app.use("/api/v1", adminRoutes);
+
 
 // Fallback port in case process.env.PORT is undefined
 const PORT = process.env.PORT || 5000;
