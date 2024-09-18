@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
   res.send("<h3> Server is working </h3>");
 });
 
+app.use("/uploads", express.static("uploads"))
+
 // Handling Routes
 import courseRoutes from "./routes/course.js";
 import adminRoutes from "./routes/admin.js";

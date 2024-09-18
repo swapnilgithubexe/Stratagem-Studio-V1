@@ -21,4 +21,18 @@ export const isAuth = async (req, res, next) => {
       message: "Login to access this resource."
     })
   }
+};
+
+export const isAdmin = (req, res, next) => {
+  try {
+    if (req.user.role !== "admin") return res.status(403).json({
+      message: "Request forbidden for users."
+    });
+
+    next();
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    })
+  }
 }
