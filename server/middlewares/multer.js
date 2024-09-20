@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
     const extName = file.originalname.split(".").pop();
     //naming the file
     const fileName = `${id}.${extName}`
-
     cb(null, fileName);
   }
 });
