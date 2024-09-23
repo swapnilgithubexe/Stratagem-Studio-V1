@@ -1,6 +1,8 @@
+import { log } from "console";
 import trycatchfunction from "../middlewares/trycatch.js";
 import { Courses } from "../models/Courses.js"
 import { Lecture } from "../models/lecture.js"
+import { rm } from "fs";
 
 export const createCourse = trycatchfunction(async (req, res) => {
   const { title, description, category, createdBy, duration, price } = req.body;
@@ -37,3 +39,27 @@ export const addLectures = trycatchfunction(async (req, res) => {
 
   res.status(201).json({ message: "Lecture Added", lecture })
 })
+
+
+
+export const deleteLecture = trycatchfunction(async (req, res) => {
+  const lecture = await Lecture.findById(req.params.id);
+
+  if (!lecture) {
+    return res.status(404).json({ message: "Lecture not found!" });
+  }
+
+  // Delete the video file
+  rm(lecture.video, (err) => {
+    if (err) {
+      console.error("Error deleting video:", err);
+      return res.status(500).json({ message: "Error deleting video file!" });
+    }
+    console.log("Video deleted successfully.");
+  });
+
+  // Delete the lecture from the database
+  await Lecture.findByIdAndDelete(req.params.id);
+
+  res.json({ message: "Lecture deleted successfully!" });
+});
