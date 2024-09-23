@@ -35,4 +35,27 @@ export const fetchLectures = trycatchfunction(async (req, res) => {
   res.json({
     lectures
   })
-})
+});
+
+export const fetchLecture = trycatchfunction(async (req, res) => {
+  const lecture = await Lecture.findById(req.params.id); // Fetch course by lectureId
+
+  const user = await User.findById(req.user.id);  // Fetch user by user ID
+
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found!" });
+  }
+
+  if (user.role === "admin") {
+    return res.json({ lecture });
+  }
+
+  if (!user.subscription.includes(req.params.lectureId)) {
+    return res.status(400).json({
+      message: "Please subscribe to view this lecture!"
+    });
+  }
+
+  res.json({ lecture });
+});
