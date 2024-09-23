@@ -1,8 +1,10 @@
-import { log } from "console";
 import trycatchfunction from "../middlewares/trycatch.js";
 import { Courses } from "../models/Courses.js"
 import { Lecture } from "../models/lecture.js"
+import { User } from "../models/user.js";
 import { rm } from "fs";
+import { promisify } from "util"
+import fs from "fs";
 
 export const createCourse = trycatchfunction(async (req, res) => {
   const { title, description, category, createdBy, duration, price } = req.body;
@@ -63,3 +65,31 @@ export const deleteLecture = trycatchfunction(async (req, res) => {
 
   res.json({ message: "Lecture deleted successfully!" });
 });
+
+//delete course
+const unlikeAsync = promisify(fs.unlink)
+export const deleteCourse = trycatchfunction(async (req, res) => {
+  const course = await Courses.findById(req.params.id);
+  const lectures = await Lecture.find({ course: course._id });
+
+  await Promise.all(
+    lectures.map(async (lecture) => {
+      await unlikeAsync(lecture.video);
+      console.log("Video Deleted Successfully");
+    })
+  )
+
+  rm(course.image, () => {
+    console.log("Thumbnail Deleted");
+  })
+
+  await Lecture.find({ course: req.params.id }).deleteMany();
+
+  await course.deleteOne()
+
+  await User.updateMany({}, { $pull: { subscription: req.params.id } });
+
+  res.json({
+    message: "Course Deleted"
+  })
+})
