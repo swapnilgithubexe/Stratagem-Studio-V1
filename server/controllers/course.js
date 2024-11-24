@@ -59,3 +59,9 @@ export const fetchLecture = trycatchfunction(async (req, res) => {
 
   res.json({ lecture });
 });
+
+export const getMyCourses = trycatchfunction(async (req, res) => {
+  const courses = await Courses.find({ _id: req.user.subscription });
+
+  res.status(200).json({ courses });
+})
