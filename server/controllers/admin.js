@@ -92,4 +92,21 @@ export const deleteCourse = trycatchfunction(async (req, res) => {
   res.json({
     message: "Course Deleted"
   })
+});
+
+export const getAllStats = trycatchfunction(async (req, res) => {
+
+  const totalCourses = (await Courses.find()).length;
+  const totalLectures = (await Lecture.find()).length;
+  const totalUsers = (await User.find()).length;
+
+
+
+  const stats = {
+    totalCourses, totalLectures, totalUsers
+  }
+
+  res.status(200).json({
+    stats
+  })
 })
