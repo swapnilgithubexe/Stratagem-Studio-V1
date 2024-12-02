@@ -2,6 +2,8 @@ import trycatchfunction from "../middlewares/trycatch.js";
 import { Courses } from "../models/Courses.js";
 import { Lecture } from "../models/lecture.js";
 import { User } from "../models/user.js";
+import { instance } from "../index.js"
+import crypto from 'crypto'
 
 
 export const getAllCourses = trycatchfunction(async (req, res) => {
@@ -64,4 +66,34 @@ export const getMyCourses = trycatchfunction(async (req, res) => {
   const courses = await Courses.find({ _id: req.user.subscription });
 
   res.status(200).json({ courses });
+});
+
+export const checkout = trycatchfunction(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  const course = await Courses.findById(req.params.id)
+
+  if (user.subscription.includes(course._id)) {
+    return res.status(400).json({
+      message: "Oops! You have this course already."
+    })
+
+  }
+
+  const options = {
+    amount: Number(course.price * 100),
+    currency: "INR",
+  }
+
+  const order = await instance.orders.create(options);
+
+  res.status(200).json({
+    order, course
+  });
+});
+
+export const paymentVerification = trycatchfunction(async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+  const body = razorpay_order_id + "|" + razorpay_payment_id
+  const expectedSignature = crypto.createHash("sha256", process.env.Razorpay_Secret).update(body).digest("hex");
 })

@@ -6,7 +6,7 @@ import Razorpay from "Razorpay";
 // Load environment variables from .env file
 dotenv.config();
 
-const instance = new Razorpay({
+export const instance = new Razorpay({
   key_id: process.env.Razorpay_Key,
   key_secret: process.env.Razorpay_Secret,
 });
