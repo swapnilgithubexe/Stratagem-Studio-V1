@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./database/db.js";
 import Razorpay from "Razorpay";
+import cors from "cors";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,6 +17,7 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+app.use(cors());
 
 // Route to check if the server is running
 app.get("/", (req, res) => {
