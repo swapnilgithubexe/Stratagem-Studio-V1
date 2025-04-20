@@ -2,7 +2,7 @@ import React from "react";
 import "./footer.css";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 
-import { FaXTwitter } from "react-icons/fa6";
+import { FaXTwitter, FaGithub } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -21,6 +21,9 @@ const Footer = () => {
           </a>
           <a href="">
             <FaInstagram />
+          </a>
+          <a href="">
+            <FaGithub />
           </a>
         </div>
       </div>

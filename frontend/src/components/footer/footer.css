@@ -11,20 +11,20 @@ footer {
 
     p {
       margin: 0;
-      font-size: 14px;
+      font-size: 18px;
     }
 
     a {
       text-decoration: none;
       color: inherit;
     }
-    .social-link {
+    .social-links {
       margin-top: 10px;
 
       a {
-        color: white;
-        font-size: 18px;
-        margin: 0 10px;
+        color: rgb(245, 155, 170);
+        font-size: 25px;
+        margin: 5px 10px;
         text-decoration: none;
         transition: color 0.3s ease;
 
