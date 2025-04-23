@@ -32,6 +32,40 @@ export const UserContextProvider = ({ children }) => {
     }
   }
 
+  async function registerUser(name, email, password, navigate) {
+    setBtnLoading(true);
+    try {
+      const { data } = await axios.post(`${server}/api/v1/user/register`, {
+        name,
+        email,
+        password,
+      });
+      toast.success(data.message);
+      localStorage.setItem("activationToken", data.activationToken);
+      setBtnLoading(false);
+      navigate("/verify");
+    } catch (error) {
+      console.log(error.message);
+      setBtnLoading(false);
+      toast.error(error.response.data.message);
+    }
+  }
+
+  async function verifyOtp(otp, navigate) {
+    const activationToken = localStorage.getItem("activationToken");
+    try {
+      const { data } = await axios.post(`${server}/api/v1/user/verify`, {
+        otp,
+        activationToken,
+      });
+      toast.success(data.message);
+      navigate("/login");
+      localStorage.clear();
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
   async function fetchUser() {
     try {
       const { data } = await axios.get(`${server}/api/v1/user/me`, {
@@ -54,7 +88,17 @@ export const UserContextProvider = ({ children }) => {
   }, []);
   return (
     <UserContext.Provider
-      value={{ user, setUser, setIsAuth, isAuth, login, btnLoading, loading }}
+      value={{
+        user,
+        setUser,
+        setIsAuth,
+        isAuth,
+        login,
+        btnLoading,
+        loading,
+        registerUser,
+        verifyOtp,
+      }}
     >
       {children}
       <Toaster />
