@@ -52,6 +52,7 @@ export const UserContextProvider = ({ children }) => {
   }
 
   async function verifyOtp(otp, navigate) {
+    setBtnLoading(true);
     const activationToken = localStorage.getItem("activationToken");
     try {
       const { data } = await axios.post(`${server}/api/v1/user/verify`, {
@@ -61,8 +62,10 @@ export const UserContextProvider = ({ children }) => {
       toast.success(data.message);
       navigate("/login");
       localStorage.clear();
+      setBtnLoading(false);
     } catch (error) {
       toast.error(error.response.data.message);
+      setBtnLoading(false);
     }
   }
 
