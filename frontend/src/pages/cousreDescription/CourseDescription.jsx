@@ -23,7 +23,6 @@ const CourseDescription = ({ user }) => {
   const checkoutHandler = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
-    console.log(token);
 
     const {
       data: { order },

@@ -1,11 +1,14 @@
 import React from "react";
 import "./header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = ({ isAuth }) => {
+  const navigate = useNavigate();
   return (
     <header>
-      <div className="logo">StrataGem Studio</div>
+      <div className="logo" onClick={() => navigate("/")}>
+        StrataGem Studio
+      </div>
 
       <div className="link">
         <Link to={"/home"}>Home</Link>
