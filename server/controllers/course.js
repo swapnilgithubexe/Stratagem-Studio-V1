@@ -95,8 +95,10 @@ export const checkout = trycatchfunction(async (req, res) => {
 
 export const paymentVerification = trycatchfunction(async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
   const body = razorpay_order_id + "|" + razorpay_payment_id
-  const expectedSignature = crypto.createHash("sha256", process.env.Razorpay_Secret).update(body).digest("hex");
+
+  const expectedSignature = crypto.createHmac("sha256", process.env.Razorpay_Secret).update(body).digest("hex");
 
   const isAuthentic = expectedSignature === razorpay_signature
 

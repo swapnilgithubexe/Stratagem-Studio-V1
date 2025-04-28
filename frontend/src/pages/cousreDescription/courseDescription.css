@@ -40,4 +40,11 @@
       margin: 0 auto;
     }
   }
+  h2 {
+    font-size: 20px;
+    color: #7f667f;
+  }
+  p {
+    color: #7f667f;
+  }
 }
