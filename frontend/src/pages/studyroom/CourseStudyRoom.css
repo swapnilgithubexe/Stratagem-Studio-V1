@@ -1,0 +1,31 @@
+.course-study-page {
+  padding: 50px 0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
+
+  h2 {
+    font-size: 24px;
+    color: #8a4baf;
+    text-align: center;
+  }
+  h4 {
+    font-size: 21px;
+    color: #8a4baf;
+    text-align: center;
+  }
+  h5 {
+    font-size: 20px;
+    color: #8a4baf;
+    text-align: center;
+  }
+  a {
+    text-decoration: none;
+    background-color: #e9c7fd;
+    padding: 5px 10px;
+    border: 1px solid purple;
+    border-radius: 5px;
+  }
+}

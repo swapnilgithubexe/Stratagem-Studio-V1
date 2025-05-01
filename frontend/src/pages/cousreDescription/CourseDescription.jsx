@@ -10,7 +10,7 @@ import Loading from "../../components/loading/Loading";
 
 const CourseDescription = ({ user }) => {
   const params = useParams();
-  const { fetchCourse, course, fetchCourses } = CourseData();
+  const { fetchCourse, course, fetchCourses, fetchMyCourse } = CourseData();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -66,6 +66,7 @@ const CourseDescription = ({ user }) => {
 
           await fetchUser();
           await fetchCourses();
+          await fetchMyCourse();
           toast.success(data.message);
           setLoading(false);
           navigate(`/payment-success/${razorpay_payment_id}`);
