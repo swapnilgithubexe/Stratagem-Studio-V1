@@ -6,12 +6,16 @@ const Header = ({ isAuth }) => {
   const navigate = useNavigate();
   return (
     <header>
-      <div className="logo" onClick={() => navigate("/")}>
+      <div
+        style={{ cursor: "pointer" }}
+        className="logo"
+        onClick={() => navigate("/")}
+      >
         StrataGem Studio
       </div>
 
       <div className="link">
-        <Link to={"/home"}>Home</Link>
+        <Link to={"/"}>Home</Link>
         <Link to={"/courses"}>Courses</Link>
         <Link to={"/about"}>About</Link>
         {isAuth ? (
