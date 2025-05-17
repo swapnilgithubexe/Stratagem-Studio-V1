@@ -54,7 +54,7 @@ export const fetchLecture = trycatchfunction(async (req, res) => {
     return res.json({ lecture });
   }
 
-  if (!user.subscription.includes(req.params.lectureId)) {
+  if (!user.subscription.includes(lecture.course)) {
     return res.status(400).json({
       message: "Please subscribe to view this lecture!"
     });
