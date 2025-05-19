@@ -35,14 +35,13 @@ const Lecture = ({ user }) => {
   async function fetchLecture(id) {
     setLectureLoading(true);
     try {
-      console.log(id);
-
       const { data } = await axios.get(`${server}/api/v1/lecture/${id}`, {
         headers: {
           token: localStorage.getItem("token"),
         },
       });
       setLecture(data.lecture);
+      setLectureLoading(false);
     } catch (error) {
       console.log(error);
       setLectureLoading(false);
@@ -69,6 +68,7 @@ const Lecture = ({ user }) => {
                       <video
                         src={`${server}/${lecture.video}`}
                         width={"100%"}
+                        controls
                         controlsList="nodownload noremoteplayback"
                         disablePictureInPicture
                         autoPlay
@@ -107,15 +107,13 @@ const Lecture = ({ user }) => {
 
               {lectures && lectures.length > 0 ? (
                 lectures.map((lecture, index) => (
-                  <>
-                    <div
-                      onClick={() => fetchLecture(lecture._id)}
-                      className="lecture-number"
-                      key={index}
-                    >
-                      {index + 1}. {lecture.title}
-                    </div>
-                  </>
+                  <div
+                    onClick={() => fetchLecture(lecture._id)}
+                    className="lecture-number"
+                    key={index}
+                  >
+                    {index + 1}. {lecture.title}
+                  </div>
                 ))
               ) : (
                 <p>Oops, No lecture available</p>
