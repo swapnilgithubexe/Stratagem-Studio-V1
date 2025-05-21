@@ -11,6 +11,7 @@ const Lecture = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [lectureLoading, setLectureLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const [activeLectureId, setActiveLectureId] = useState(null);
 
   const params = useParams();
 
@@ -42,6 +43,7 @@ const Lecture = ({ user }) => {
       });
       setLecture(data.lecture);
       setLectureLoading(false);
+      setActiveLectureId(id);
     } catch (error) {
       console.log(error);
       setLectureLoading(false);
@@ -83,7 +85,9 @@ const Lecture = ({ user }) => {
             </div>
             <div className="right">
               {user && user.role === "admin" && (
-                <button className="common-btn">Add Lecture</button>
+                <button onClick={() => setShow(!show)} className="common-btn">
+                  {show ? "Close" : "Add Lecture"}
+                </button>
               )}
 
               {show && (
@@ -107,13 +111,23 @@ const Lecture = ({ user }) => {
 
               {lectures && lectures.length > 0 ? (
                 lectures.map((lecture, index) => (
-                  <div
-                    onClick={() => fetchLecture(lecture._id)}
-                    className="lecture-number"
-                    key={index}
-                  >
-                    {index + 1}. {lecture.title}
-                  </div>
+                  <>
+                    <div
+                      onClick={() => fetchLecture(lecture._id)}
+                      className={`lecture-number ${activeLectureId === lecture._id ? "active" : ""}`}
+                      key={index}
+                    >
+                      {index + 1}. {lecture.title}
+                    </div>
+                    {user && user.role === "admin" && (
+                      <button
+                        className="common-btn"
+                        style={{ backgroundColor: "red" }}
+                      >
+                        Delete {lecture._id}
+                      </button>
+                    )}
+                  </>
                 ))
               ) : (
                 <p>Oops, No lecture available</p>
