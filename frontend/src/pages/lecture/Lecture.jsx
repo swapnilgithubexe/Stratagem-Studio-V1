@@ -124,7 +124,7 @@ const Lecture = ({ user }) => {
                         className="common-btn"
                         style={{ backgroundColor: "red" }}
                       >
-                        Delete {lecture._id}
+                        Delete {index + 1}
                       </button>
                     )}
                   </>
