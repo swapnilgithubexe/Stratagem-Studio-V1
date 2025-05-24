@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./lecture.css";
 import axios from "axios";
 import { server } from "../../main";
 import Loading from "../../components/loading/Loading";
+import toast from "react-hot-toast";
 
 const Lecture = ({ user }) => {
   const [lectures, setLectures] = useState([]);
@@ -14,6 +15,79 @@ const Lecture = ({ user }) => {
   const [activeLectureId, setActiveLectureId] = useState(null);
 
   const params = useParams();
+
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [video, setVideo] = useState("");
+  const [videoPreview, setVideoPreview] = useState("");
+  const [btnLoading, setBtnLoading] = useState(false);
+
+  if (user && user.role !== "admin" && !user.subscription.includes(params.id))
+    return navigate("/");
+
+  const changeVideoHandler = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      setVideoPreview(reader.result);
+      setVideo(file);
+    };
+  };
+
+  const submitHandler = async (e) => {
+    setBtnLoading(true);
+    e.preventDefault();
+    const myForm = new FormData();
+    myForm.append("title", title);
+    myForm.append("description", desc);
+    myForm.append("file", video);
+    try {
+      const data = await axios.post(
+        `${server}/api/v1/course/${params.id}`,
+        myForm,
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      toast.success(data.message || "Lecture added!");
+      setBtnLoading(false);
+      setShow(false);
+      fetchLectures();
+
+      setTitle("");
+      setDesc("");
+      setVideo("");
+      setVideoPreview("");
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+
+      setBtnLoading(false);
+    }
+  };
+
+  const deleteHandler = async (id) => {
+    if (confirm("Are you sure you wanna delete this lecture")) {
+      try {
+        const { data } = await axios.delete(`${server}/api/v1/lecture/${id}`, {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        });
+        toast.success(data.message);
+        fetchLectures();
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
 
   async function fetchLectures() {
     try {
@@ -49,6 +123,7 @@ const Lecture = ({ user }) => {
       setLectureLoading(false);
     }
   }
+
   useEffect(() => {
     fetchLectures();
   }, []);
@@ -93,17 +168,45 @@ const Lecture = ({ user }) => {
               {show && (
                 <div className="lecture-form">
                   <h2>Lecture form</h2>
-                  <form action="">
+                  <form action="" onSubmit={submitHandler}>
                     <label htmlFor="text">Title</label>
-                    <input type="text" required />
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                    />
 
                     <label htmlFor="text">Description</label>
-                    <input type="text" required />
+                    <input
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
+                      type="text"
+                      required
+                    />
+                    <label htmlFor="text">Lecture</label>
+                    <input
+                      type="file"
+                      placeholder="Choose video"
+                      required
+                      onChange={changeVideoHandler}
+                    />
 
-                    <input type="file" placeholder="Choose video" required />
+                    {videoPreview && (
+                      <video
+                        src={videoPreview}
+                        alt=""
+                        width={250}
+                        controls
+                      ></video>
+                    )}
 
-                    <button type="submit" className="common-btn">
-                      Add
+                    <button
+                      disabled={btnLoading}
+                      type="submit"
+                      className="common-btn"
+                    >
+                      {btnLoading ? "Please wait..." : "Add"}
                     </button>
                   </form>
                 </div>
@@ -121,10 +224,11 @@ const Lecture = ({ user }) => {
                     </div>
                     {user && user.role === "admin" && (
                       <button
+                        onClick={() => deleteHandler(lecture._id)}
                         className="common-btn"
                         style={{ backgroundColor: "red" }}
                       >
-                        Delete {index + 1}
+                        Delete lecture {index + 1}
                       </button>
                     )}
                   </>

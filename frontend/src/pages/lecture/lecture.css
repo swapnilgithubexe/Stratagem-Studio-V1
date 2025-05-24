@@ -3,6 +3,11 @@
   justify-content: space-between;
   min-height: 80vh;
 
+  h1 {
+    font-size: 30px;
+    color: #8a4baf;
+  }
+
   @media (max-width: 768px) {
     flex-direction: column;
     justify-content: center;
